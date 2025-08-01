@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace BookShelf.Entities
 {
-    public class Book : BaseEntity
+    public class Librarian : BaseEntity
     {
-        public string Title { get; set; }
-        public Author Author { get; set; }
-
+        public string Name { get; set; }
     }
 }

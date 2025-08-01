@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BookShelf.Entities
 {
-    internal class BaseEntity
+    public class BaseEntity
     {
         public int Id { get; set; }
-        }
+        
     }
 }
