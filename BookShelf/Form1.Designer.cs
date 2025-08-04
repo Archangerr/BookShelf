@@ -118,7 +118,7 @@
             // 
             // tabControl1
             // 
-            tabControl1.Location = new Point(222, 339);
+            tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new Size(790, 433);
@@ -160,6 +160,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(tabControl1);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(AddAuthorTxtBox);
@@ -168,7 +169,6 @@
             Controls.Add(textTitle);
             Controls.Add(dataGridViewBooks);
             Controls.Add(comboAuthors);
-            Controls.Add(tabControl1);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridViewBooks).EndInit();

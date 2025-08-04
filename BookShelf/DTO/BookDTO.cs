@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookShelf.DTO
 {
-    internal class BookDTO
+    public class BookDTO
     {
         public class BookDisplay
         {

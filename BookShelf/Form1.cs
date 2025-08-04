@@ -43,6 +43,8 @@ namespace BookShelf
             authors.Add(new Author { Id = 1, Name = "J.K. Rowling" });
             authors.Add(new Author { Id = 2, Name = "George R.R. Martin" });
             authors.Add(new Author { Id = 3, Name = "J.R.R. Tolkien" });
+
+
         }
 
         private void RefreshAuthors()

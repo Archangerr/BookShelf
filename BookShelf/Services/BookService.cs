@@ -29,7 +29,7 @@ namespace BookShelf.Services
             author.Books.Add(book);
         }
 
-        public void EditBook(int id, string title, Author author, string year)
+        public void EditBook(int id, string title, Author author)
         {
             var book = books.FirstOrDefault(b => b.Id == id);
             if (book != null)
