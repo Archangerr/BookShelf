@@ -1,3 +1,4 @@
+using BookShelf.Controller;
 using BookShelf.Entities;
 using BookShelf.Services;
 using System.Collections.Generic;
@@ -16,6 +17,23 @@ namespace BookShelf
         {
             InitializeComponent();
             InitializeAuthors();
+
+            BooksControl booksControl = new BooksControl(authors);
+            booksControl.Dock = DockStyle.Fill;
+
+            TabPage tabBooks = new TabPage("Books");
+            tabBooks.Controls.Add(booksControl);
+
+            tabControl1.TabPages.Add(tabBooks);
+
+            //var authorsControl = new AuthorsControl(authors);
+            //authorsControl.Dock = DockStyle.Fill;
+
+            var tabAuthors = new TabPage("Authors");
+            //tabAuthors.Controls.Add(authorsControl);
+
+            tabControl1.TabPages.Add(tabAuthors);
+
             RefreshAuthors();
             RefreshBooks();
         }
@@ -38,10 +56,10 @@ namespace BookShelf
             var bookDisplays = bookService.GetAllBooks()
                 .Select(b => new BookDisplay
                 {
-                     Id = b.Id,
+                    Id = b.Id,
                     Title = b.Title,
-                    AuthorName = b.Author?.Name, // Just show the name
-                
+                    AuthorName = b.Author?.Name,
+
                 }).ToList();
 
             dataGridViewBooks.DataSource = null;
@@ -78,10 +96,42 @@ namespace BookShelf
 
         }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
 
+        }
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Author? author = new Author();
+            author.Name = AddAuthorTxt.Text;
+            if (string.IsNullOrWhiteSpace(author.Name))
+            {
+                MessageBox.Show("Please enter a valid author name.");
+                return;
+            }
+            authors.Add(author);
+            RefreshAuthors();
+        }
 
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedTab = tabControl1.SelectedTab;
 
+            if (selectedTab.Text == "Authors")
+            {
+                tabControl1.Visible = false;
+            }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            tabControl1.Visible = true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            tabControl1.Visible = true;
+        }
     }
 }
