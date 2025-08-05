@@ -35,24 +35,24 @@
             // 
             // txtTitle
             // 
-            txtTitle.Location = new Point(12, 139);
+            txtTitle.Location = new Point(90, 139);
             txtTitle.Name = "txtTitle";
-            txtTitle.Size = new Size(100, 23);
+            txtTitle.Size = new Size(147, 23);
             txtTitle.TabIndex = 0;
             // 
             // comboAuthors
             // 
-            comboAuthors.Location = new Point(116, 81);
+            comboAuthors.Location = new Point(90, 81);
             comboAuthors.Name = "comboAuthors";
-            comboAuthors.Size = new Size(121, 23);
+            comboAuthors.Size = new Size(147, 23);
             comboAuthors.TabIndex = 1;
             comboAuthors.SelectedIndexChanged += comboAuthors_SelectedIndexChanged;
             // 
             // btnOk
             // 
-            btnOk.Location = new Point(162, 110);
+            btnOk.Location = new Point(90, 110);
             btnOk.Name = "btnOk";
-            btnOk.Size = new Size(75, 23);
+            btnOk.Size = new Size(147, 23);
             btnOk.TabIndex = 2;
             btnOk.Click += BtnOk_Click;
             // 
@@ -60,7 +60,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(642, 410);
+            ClientSize = new Size(427, 260);
             Controls.Add(txtTitle);
             Controls.Add(comboAuthors);
             Controls.Add(btnOk);

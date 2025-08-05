@@ -17,6 +17,7 @@ namespace BookShelf.Controller
         private ComboBox comboAuthor;
         private List<Author> authors;
         private int selectedBookID = -1;
+        private Button btnRemove;
         private Button btnEdit;
 
 
@@ -25,6 +26,8 @@ namespace BookShelf.Controller
             bookGridView = new DataGridView();
             textBox1 = new TextBox();
             comboAuthor = new ComboBox();
+            btnEdit = new Button();
+            btnRemove = new Button();
             ((System.ComponentModel.ISupportInitialize)bookGridView).BeginInit();
             SuspendLayout();
             // 
@@ -32,12 +35,12 @@ namespace BookShelf.Controller
             // 
             bookGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             bookGridView.Location = new Point(32, 53);
+            bookGridView.MultiSelect = false;
             bookGridView.Name = "bookGridView";
+            bookGridView.ReadOnly = true;
+            bookGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             bookGridView.Size = new Size(478, 102);
             bookGridView.TabIndex = 0;
-            bookGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            bookGridView.MultiSelect = false; // Optional: only one row at a time
-            bookGridView.ReadOnly = true;     // Optional: if you don't want inline editing
             // 
             // textBox1
             // 
@@ -48,12 +51,6 @@ namespace BookShelf.Controller
             // 
             // comboAuthor
             // 
-            btnEdit = new Button();
-            btnEdit.Text = "Edit Book";
-            btnEdit.Location = new Point(46, 240); // adjust position as needed
-            btnEdit.Click += BtnEdit_Click;
-            Controls.Add(btnEdit);
-
             comboAuthor.FormattingEnabled = true;
             comboAuthor.Location = new Point(46, 205);
             comboAuthor.Name = "comboAuthor";
@@ -61,8 +58,28 @@ namespace BookShelf.Controller
             comboAuthor.TabIndex = 2;
             comboAuthor.SelectedIndexChanged += comboAuthor_SelectedIndexChanged;
             // 
+            // btnEdit
+            // 
+            btnEdit.Location = new Point(46, 240);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(75, 23);
+            btnEdit.TabIndex = 0;
+            btnEdit.Text = "Edit Book";
+            btnEdit.Click += BtnEdit_Click;
+            // 
+            // btnRemove
+            // 
+            btnRemove.Location = new Point(168, 240);
+            btnRemove.Name = "btnRemove";
+            btnRemove.Size = new Size(75, 23);
+            btnRemove.TabIndex = 3;
+            btnRemove.Text = "Edit Book";
+            btnRemove.Click += btnRemove_Click;
+            // 
             // BooksControl
             // 
+            Controls.Add(btnRemove);
+            Controls.Add(btnEdit);
             Controls.Add(comboAuthor);
             Controls.Add(textBox1);
             Controls.Add(bookGridView);
@@ -152,7 +169,7 @@ namespace BookShelf.Controller
                     RefreshBooks(selectedAuthor);
                 }
             }
-            
+
         }
 
         private void BtnEdit_Click(object sender, EventArgs e)
@@ -177,5 +194,14 @@ namespace BookShelf.Controller
             }
         }
 
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (bookGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a book to Remove.");
+                return;
+            }
+
+        }
     }
 }
