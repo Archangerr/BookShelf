@@ -14,15 +14,17 @@ namespace BookShelf.Controller
         private BookService bookService = new();
         private DataGridView bookGridView;
         private TextBox textBox1;
-        private ComboBox comboBox1;
+        private ComboBox comboAuthor;
         private List<Author> authors;
         private int selectedBookID = -1;
+        private Button btnEdit;
+
 
         private void InitializeComponent()
         {
             bookGridView = new DataGridView();
             textBox1 = new TextBox();
-            comboBox1 = new ComboBox();
+            comboAuthor = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)bookGridView).BeginInit();
             SuspendLayout();
             // 
@@ -33,6 +35,9 @@ namespace BookShelf.Controller
             bookGridView.Name = "bookGridView";
             bookGridView.Size = new Size(478, 102);
             bookGridView.TabIndex = 0;
+            bookGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            bookGridView.MultiSelect = false; // Optional: only one row at a time
+            bookGridView.ReadOnly = true;     // Optional: if you don't want inline editing
             // 
             // textBox1
             // 
@@ -41,17 +46,24 @@ namespace BookShelf.Controller
             textBox1.Size = new Size(133, 23);
             textBox1.TabIndex = 1;
             // 
-            // comboBox1
+            // comboAuthor
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(46, 205);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(197, 23);
-            comboBox1.TabIndex = 2;
+            btnEdit = new Button();
+            btnEdit.Text = "Edit Book";
+            btnEdit.Location = new Point(46, 240); // adjust position as needed
+            btnEdit.Click += BtnEdit_Click;
+            Controls.Add(btnEdit);
+
+            comboAuthor.FormattingEnabled = true;
+            comboAuthor.Location = new Point(46, 205);
+            comboAuthor.Name = "comboAuthor";
+            comboAuthor.Size = new Size(197, 23);
+            comboAuthor.TabIndex = 2;
+            comboAuthor.SelectedIndexChanged += comboAuthor_SelectedIndexChanged;
             // 
             // BooksControl
             // 
-            Controls.Add(comboBox1);
+            Controls.Add(comboAuthor);
             Controls.Add(textBox1);
             Controls.Add(bookGridView);
             Name = "BooksControl";
@@ -66,10 +78,16 @@ namespace BookShelf.Controller
         {
 
             authors = sharedAuthors;
+            authors.Add(new Author { Id = -1, Name = "Show All" }); // Dummy author for "Show All" option
             InitializeComponent();
             bookService.AddBook("Harry Potter and the Philosopher's Stone", authors.FirstOrDefault(a => a.Name == "J.K. Rowling"));
             bookService.AddBook("A Game of Thrones", authors.FirstOrDefault(a => a.Name == "George R.R. Martin"));
             bookService.AddBook("The Hobbit", authors.FirstOrDefault(a => a.Name == "J.R.R. Tolkien"));
+
+            comboAuthor.Items.Insert(0, "Show All");
+            comboAuthor.DataSource = authors;
+            comboAuthor.DisplayMember = "Name";
+
             RefreshBooks();
         }
 
@@ -87,6 +105,22 @@ namespace BookShelf.Controller
             bookGridView.ClearSelection();
         }
 
+        private void RefreshBooks(Author selectedAuthor)
+        {
+            var books = bookService.GetAllBooks()
+                .Where(b => b.Author?.Id == selectedAuthor.Id)
+                .Select(b => new BookDisplay
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    AuthorName = b.Author?.Name ?? ""
+                }).ToList();
+
+            bookGridView.DataSource = books;
+            bookGridView.ClearSelection();
+        }
+
+
         private void DataGridViewBooks_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -100,8 +134,48 @@ namespace BookShelf.Controller
             }
         }
 
+        private void DataGridViewBooks_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var selectedRow = bookGridView.Rows[e.RowIndex];
+        }
 
+        private void comboAuthor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboAuthor.SelectedItem is Author selectedAuthor)
+            {
+                if (selectedAuthor.Id == -1) // "Show All" option
+                {
+                    RefreshBooks();
+                }
+                else
+                {
+                    RefreshBooks(selectedAuthor);
+                }
+            }
+            
+        }
 
+        private void BtnEdit_Click(object sender, EventArgs e)
+        {
+            if (bookGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a book to edit.");
+                return;
+            }
+
+            var selectedRow = bookGridView.SelectedRows[0];
+            int bookId = (int)selectedRow.Cells["Id"].Value;
+            string currentTitle = selectedRow.Cells["Title"].Value.ToString();
+            string currentAuthorName = selectedRow.Cells["AuthorName"].Value.ToString();
+            var currentAuthor = authors.FirstOrDefault(a => a.Name == currentAuthorName);
+
+            var editForm = new EditBookForm(currentTitle, currentAuthor, authors);
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                bookService.EditBook(bookId, editForm.BookTitle, editForm.SelectedAuthor);
+                RefreshBooks();
+            }
+        }
 
     }
 }
